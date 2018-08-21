@@ -1,0 +1,10 @@
+"C:/Program Files/Inkscape/Inkscape.exe" --export-dpi=300 --export-png=runde0.png runde0.svg
+"C:/Program Files/Inkscape/Inkscape.exe" --export-dpi=300 --export-png=runde1.png runde1.svg
+"C:/Program Files/Inkscape/Inkscape.exe" --export-dpi=300 --export-png=runde2.png runde2.svg
+"C:/Program Files/Inkscape/Inkscape.exe" --export-dpi=300 --export-png=runde3.png runde3.svg
+"C:/Program Files/Inkscape/Inkscape.exe" --export-dpi=300 --export-png=runde4.png runde4.svg
+"C:/Program Files/Inkscape/Inkscape.exe" --export-dpi=300 --export-png=runde5.png runde5.svg
+"C:/Program Files/Inkscape/Inkscape.exe" --export-dpi=300 --export-png=runde6.png runde6.svg
+"C:/Program Files/Inkscape/Inkscape.exe" --export-dpi=300 --export-png=runde7.png runde7.svg
+"C:/Program Files/Inkscape/Inkscape.exe" --export-dpi=300 --export-png=runde8.png runde8.svg
+"C:/Program Files/Inkscape/Inkscape.exe" --export-dpi=300 --export-png=runde9.png runde9.svg
