@@ -13,7 +13,7 @@ class Ki:
 		self.spieler = spieler
 		spieler.ki = self
 		self.spielfeld = spiel.spielfeld
-		self.searchalgorithm = AStar.AStar( self.spieler, self.spielfeld )
+		self.searchalgorithm = AStar.AStar( self.spieler, self.spielfeld, spiel.wetter )
 		
 	def bedarfMachbar( self, bedarf ):
 		gesamteAuslage = multiset.Multiset()
@@ -88,7 +88,10 @@ class Ki:
 		for i in range(1,len(makroplan.route)):
 			start = makroplan.route[i-1][0]
 			ziel = makroplan.route[i][0]
-			(bewegung,cost) = self.searchalgorithm.search( start, ziel )
+			(bewegung,cost,erfolg) = self.searchalgorithm.search( start, ziel )
+			if not erfolg:
+				return None
+
 			mikroplan += bewegung
 			aktion = makroplan.route[i][1]
 			

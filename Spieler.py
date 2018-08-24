@@ -33,6 +33,9 @@ class Spieler:
 				print("Spieler: ", self.name, "setzt aus" )
 				return
 			mikroPlan = self.ki.macheMikroPlan( makroPlan )
+			if mikroPlan == None:
+				print("Spieler: ", self.name, "setzt aus" )
+				return
 			for aktion in mikroPlan:
 				if ( aktion[0] == "bewege" ):
 					if self.bewegungspunkte == 0:

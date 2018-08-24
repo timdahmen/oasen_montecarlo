@@ -114,7 +114,13 @@ class Spielfeld:
 			if self.isInside( feld ):
 				result.append( feld )
 		return result
-	
+		
+	def richtungZuFeld( self, von, nach ):
+		vonCube = self.offset_to_cube( von )
+		nachCube  = self.offset_to_cube( nach )
+		richtung = ( int(nachCube[0]-vonCube[0]), int(nachCube[1]-vonCube[1]), int(nachCube[2]-vonCube[2]) )
+		return richtung
+		
 	def hexDistanz( self, vonPosition, nachPosition ):
 		ac = self.offset_to_cube(vonPosition)
 		bc = self.offset_to_cube(nachPosition)
@@ -124,7 +130,7 @@ class Spielfeld:
 		x = hex[0] - (hex[1] - (hex[1] & 1)) / 2
 		z = hex[1]
 		y = -x-z
-		return (x, y, z)
+		return (int(x), int(y), int(z) )
 		
 	def cube_to_offset( self, cube ):
 		col = cube[0] + (cube[2] - (cube[2]&1)) / 2

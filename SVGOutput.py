@@ -2,6 +2,8 @@ from svgutils import *
 import math
 
 def drawPosition( x, y ):
+	x = x + 1
+	y = y - 8
 	size = 22.0
 	w = math.sqrt(3.0) * size
 	h = size * 2.0
@@ -9,7 +11,7 @@ def drawPosition( x, y ):
 		drawx = (x+0.5) * w
 	else:
 		drawx = (x+1) * w
-	drawy = -y * 3/4 * h
+	drawy = y * 3/4 * h
 	return (drawx,drawy)
 		
 def setzeIconAufFeld( figure, pos, filename ):
@@ -27,8 +29,10 @@ def haengeIconAnFeld( figure, pos, filename, belegung ):
 		belegung[pos] = belegung[pos] + 1
 	else:
 		belegung[pos] = 0
-	
-	ydraw += belegung[pos] * 6.0
+
+	ydraw -= 12
+	ydraw += ( belegung[pos] % 4 ) * 6.0
+	xdraw += math.floor( belegung[pos] / 4 ) * 6.0
 	
 	icon.moveto( xdraw, ydraw )
 	figure.append( icon )
@@ -42,12 +46,6 @@ def setzeIconZwischenFeld( figure, posA, posB, filename ):
 	figure.append( icon )
 	return
 
-def zeichneLinie( figure, von, bis ):
-	vonDraw = drawPosition( von[0], von[1]+9 )
-	bisDraw = drawPosition( bis[0], bis[1]+9 )	
-	linie = transform.LineElement( [ vonDraw, bisDraw ])
-	figure.append( linie )
-	
 def zeichneSpielfeld( spiel, spielfeld, filename ):
 	figure = transform.SVGFigure("10cm", "10cm")
 	# background = transform.fromfile('img/spielfeld_leer.svg').getroot()
@@ -81,10 +79,19 @@ def zeichneSpielfeld( spiel, spielfeld, filename ):
 		for aktion in spieler.letzterZug:
 			if aktion[0] is "start":
 				haengeIconAnFeld( figure, aktion[1], "img/" + spieler.name + "_start.svg", belegung)
+				position = aktion[1]	
 			if aktion[0] is "bewege":
 				haengeIconAnFeld( figure, aktion[1], "img/" + spieler.name + "_bewegung.svg", belegung)
-				position = aktion[1]		
-					
+				position = aktion[1]	
+			if aktion[0] is "kaufe":
+				haengeIconAnFeld( figure, position, "img/" + aktion[1] + ".svg", belegung)
+			if aktion[0] is "verkaufe":
+				for ware in aktion[1].waren:
+					haengeIconAnFeld( figure, position, "img/" + ware + ".svg", belegung)
+				
+
+	setzeIconAufFeld( figure, (-1,4), "img/" + spiel.wetter.aktuellesWetter + ".svg" )
+				
 	figure.save( filename )
 	return
 	

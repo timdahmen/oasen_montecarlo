@@ -5,6 +5,7 @@ import Spielfeld
 import Bedarf
 import Spieler
 import Ki
+import Wetter
 
 import SVGOutput
 
@@ -13,7 +14,8 @@ print("Oasen!")
 class Oasen:
 	def __init__( self ):
 		self.bedarfe = []
-		self.spielfeld = Spielfeld.Spielfeld( self ) 
+		self.spielfeld = Spielfeld.Spielfeld( self )
+		self.wetter = Wetter.Wetter( self )
 		self.bedarfe = self.erstelleBedarfe()
 		self.maxInventory = 6
 		self.erstelleSpieler()
@@ -29,8 +31,10 @@ class Oasen:
 
 	def erstelleSpieler( self ):
 		self.spieler = []
-		for i in range(0, 4):
-			self.spieler.append( Spieler.Spieler( "spieler" + str(i), self.spielfeld.staedte[i].position, self ) )
+		self.spieler.append( Spieler.Spieler( "spieler_rot", self.spielfeld.staedte[0].position, self ) )
+		self.spieler.append( Spieler.Spieler( "spieler_gelb", self.spielfeld.staedte[1].position, self ) )
+		self.spieler.append( Spieler.Spieler( "spieler_grün", self.spielfeld.staedte[2].position, self ) )
+		self.spieler.append( Spieler.Spieler( "spieler_blau", self.spielfeld.staedte[3].position, self ) )
 
 	def wechseleStartSpieler( self ):
 		tmp = self.spieler[0]
@@ -39,6 +43,7 @@ class Oasen:
 			
 	def runde( self ):
 		self.wechseleStartSpieler()
+		self.wetter.zieheWetter()
 		for aktuellerSpieler in self.spieler:
 			aktuellerSpieler.zug()
 		self.nachziehPhase()
@@ -59,14 +64,23 @@ class Oasen:
 		bergHoehe = self.spielfeld.hoehe( spieler.position, position )
 		if spieler.flughoehe < bergHoehe:
 			print( "ungültiger zugversuch (hoehe: ", spieler.flughoehe, "erforderlich:",bergHoehe,")" )
-			return False		
+			return False	
+		richtung = self.spielfeld.richtungZuFeld( spieler.position, position )
+		if self.wetter.zugUngueltig( richtung ):
+			print( "ungültiger zugversuch (gegen den Wind)" )
+			return False
+		print("richtung",self.wetter.richtungToString(richtung),"von",spieler.position,"nach",position,"wetter",self.wetter.aktuellesWetter )
 		return True
 	
 	def aktionBewege( self, spieler, position ):
 		if self.zugGueltig( spieler, position ):
+			richtung = self.spielfeld.richtungZuFeld( spieler.position, position )
 			spieler.position = position
-			spieler.bewegungspunkte -= 1
-			print( spieler.name, "bewegt nach", spieler.position )
+			if not self.wetter.zugGratis( richtung ):
+				spieler.bewegungspunkte -= 1
+				print( spieler.name, "bewegt nach", spieler.position )
+			else:
+				print( spieler.name, "bewegt nach", spieler.position, "(gratis)" )
 		else:
 			quit()
 	
@@ -130,4 +144,4 @@ for i in range(0,16):
 	print("Runde", i)
 	print("==========")
 	spiel.runde()
-	# SVGOutput.zeichneSpielfeld( spiel, spiel.spielfeld, "runde"+str(i)+".svg" )
+	SVGOutput.zeichneSpielfeld( spiel, spiel.spielfeld, "output/runde"+str(i)+".svg" )
